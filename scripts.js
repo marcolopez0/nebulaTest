@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
           conversationTest = JSON.parse(conversationTest);
         } else {
           conversationTest = [];
-          localStorage.setItem('conversationId', JSON.stringify(conversationTest));
+          localStorage.setItem('conversationId', JSON.stringify(conversationId));
         }
         // var listArray = [conversationId,token];
         // console.log(listArray);
