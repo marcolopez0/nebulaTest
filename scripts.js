@@ -82,6 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // It must be treated like user password.
         conversationId = sessionStorage['conversationId'];  // If this is set, the there is an existing conversation to be retrieved, watermark is a const value of 1
         var directLine;
+
+        conversationTest = localStorage.getItem('conversationId');
+        if(conversationTest) {
+          conversationTest = JSON.parse(conversationTest);
+        } else {
+          conversationTest = [];
+          localStorage.setItem('conversationId', JSON.stringify(conversationTest));
+        }
         // var listArray = [conversationId,token];
         // console.log(listArray);
         if(conversationId) { 
