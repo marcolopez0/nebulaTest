@@ -82,14 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // It must be treated like user password.
         conversationId = sessionStorage['conversationId'];  // If this is set, the there is an existing conversation to be retrieved, watermark is a const value of 1
         var directLine;
-
-        conversationTest = localStorage.getItem('conversationId');
-        if(conversationTest) {
-          conversationTest = JSON.parse(conversationTest);
-        } else {
-          conversationTest = [];
-          localStorage.setItem('conversationId', JSON.stringify(conversationId));
-        }
+        addToStorage(conversationId);
+        // conversationTest = localStorage.setItem('conversationId', JSON.stringify(conversationId));
+        // if(conversationTest != "") {
+        //   console.log("hola");
+        // } else {
+        //   conversationTest = [];
+        //   conversationTest.push(localStorage.setItem('conversationId', JSON.stringify( sessionStorage['conversationId'])));
+        // }
         // var listArray = [conversationId,token];
         // console.log(listArray);
         if(conversationId) { 
@@ -103,26 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
           // console.log(listArray);
         }
 
-
-
-    // const directLine = window.WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
-  
-    // const subscription = directLine.connectionStatus$.subscribe({
-    //   next(value) {
-    //     if (value === 2) {
-    //       directLine
-    //         .postActivity({
-    //           localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    //           locale,
-    //           name: 'startConversation',
-    //           type: 'event',
-    //           value: { DirectLineToken: token }
-    //         })
-    //         .subscribe();
-    //       subscription.unsubscribe();
-    //     }
-    //   }
-    // });
   
     // Sends "startConversation" event when the connection is established.
     const subscription = directLine.connectionStatus$.subscribe({
@@ -156,6 +136,12 @@ document.addEventListener('DOMContentLoaded', function() {
         value: token
       }).subscribe();
     }
+
+    function addToStorage(value) {
+      let storageArray = JSON.parse(localStorage.getItem('myArray')) || [];
+      storageArray.push(value);
+      localStorage.setItem('myArray', JSON.stringify(storageArray));
+  }
   
     window.WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
   })();
