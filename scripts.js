@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var directLine;
         addToStorageConvoId(sessionStorage['conversationId']);
         addToStorageToken(sessionStorage['token']);
+        addToStorageButton(sessionStorage['conversationId']);
+
         // var listArray = [conversationId,token];
         // console.log(listArray);
         if(conversationId) { 
@@ -95,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let storageArray1 = JSON.parse(localStorage.getItem('ConvoArray')) || [];
         let storageArray2 = JSON.parse(localStorage.getItem('TokenArray')) || [];
+        let storageArray3 = JSON.parse(localStorage.getItem('buttonArray')) || [];
         let convoId = "";
         let tokes = "";
     
@@ -123,21 +126,19 @@ document.addEventListener('DOMContentLoaded', function() {
           localStorage.setItem('TokenArray', JSON.stringify(storageArray));
           
       }
-      
-      //Delete duplicates of the arrays created on the local storage
-      // function deleteDuplicates(){
-      // // Retrieve the array from local storage
-      // let storedArray = JSON.parse(localStorage.getItem('myArray')) || [];
 
-      // // Check if the item already exists in the array
-      // if (!storedArray.includes(newItem)) {
-      //     // Add the new item to the array
-      //     storedArray.push(newItem);
-      // // Update the array in local storage
-      // localStorage.setItem('myArray', JSON.stringify(storedArray));
-      //   }
-      // }
-    
+      function addToStorageButton(value) {
+        let storageArray = JSON.parse(localStorage.getItem('buttonArray')) || [];
+        // storageArray.push(value);
+        if (!storageArray.includes(value) && value != null) {
+        //     // Add the new item to the array
+            storageArray.push(value);
+        //     // Update the array in local storage
+            localStorage.setItem('buttonArray', JSON.stringify(storageArray));
+          }
+        // localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
+        
+    }
     
       function getPairedValues(storageArray1, storageArray2) {
         let pairedValues = [];
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // console.log(resu3);
     
         function displayButtons() {
-            let storageArray = JSON.parse(localStorage.getItem('ConvoArray')) || [];
+            let storageArray = JSON.parse(localStorage.getItem('buttonArray')) || [];
             let buttonContainer = document.getElementById('buttonContainer');
         
             // Clear existing buttons
