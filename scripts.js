@@ -100,27 +100,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
         function addToStorageConvoId(value) {
             let storageArray = JSON.parse(localStorage.getItem('ConvoArray')) || [];
-            // storageArray.push(value);
-            if (!storageArray.includes(value) && value != null) {
-                // Add the new item to the array
-                storageArray.push(value);
-                // Update the array in local storage
-                localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
-              }
-            // localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
+            storageArray.push(value);
+            // if (!storageArray.includes(value) && value != null) {
+            //     // Add the new item to the array
+            //     storageArray.push(value);
+            //     // Update the array in local storage
+            //     localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
+            //   }
+            localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
             
         }
     
         function addToStorageToken(value) {
           let storageArray = JSON.parse(localStorage.getItem('TokenArray')) || [];
-          // storageArray.push(value);
-          if (!storageArray.includes(value) && value != null) {
-            // Add the new item to the array
-            storageArray.push(value);
-            // Update the array in local storage
-            localStorage.setItem('TokenArray', JSON.stringify(storageArray));
-          }
-          // localStorage.setItem('TokenArray', JSON.stringify(storageArray));
+          storageArray.push(value);
+          // if (!storageArray.includes(value) && value != null) {
+          //   // Add the new item to the array
+          //   storageArray.push(value);
+          //   // Update the array in local storage
+          //   localStorage.setItem('TokenArray', JSON.stringify(storageArray));
+          // }
+          localStorage.setItem('TokenArray', JSON.stringify(storageArray));
           
       }
       
