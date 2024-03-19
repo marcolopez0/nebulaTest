@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     // Agrega un evento al botón para ocultar el descargo de responsabilidad cuando se hace clic en "Aceptar"
     document.getElementById('accept-button').addEventListener('click', function() {
@@ -23,28 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
     const apiVersion = tokenEndpointURL.searchParams.get('api-version');
     const watermark = 1; 
-  // console.log(tokenEndpointURL);
-  // console.log(apiVersion);
-    // const [directLineURL, token] = await Promise.all([
-    //   fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
-      
-    //     .then(response => {
-    //       if (!response.ok) {
-    //         throw new Error('Failed to retrieve regional channel settings.');
-           
-    //       }
-    //       return response.json();
-    //     })
-    //     .then(({ channelUrlsById: { directline } }) => directline),
-    //   fetch(tokenEndpointURL)
-    //     .then(response => {
-    //       if (!response.ok) {
-    //         throw new Error('Failed to retrieve Direct Line token.');
-    //       }
-    //       return response.json();
-    //     })
-    //     .then(({ token }) => token)
-    // ]);
+  
      // If the token is empty, then we need to get the URL and token, otherwise there is an existing conversion and we need to 
         // use the existing token to retrieve the existing conversation
                 // If the token is empty, then we need to get the URL and token, otherwise there is an existing conversion and we need to 
@@ -86,8 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addToStorageToken(sessionStorage['token']);
         addToStorageButton(sessionStorage['conversationId']);
 
-        // var listArray = [conversationId,token];
-        // console.log(listArray);
+
         if(conversationId) { 
           directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', sessionStorage['directLineURL']), token: sessionStorage['token'], conversationId: conversationId, watermark: watermark});
         }
@@ -97,19 +74,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let storageArray1 = JSON.parse(localStorage.getItem('ConvoArray')) || [];
         let storageArray2 = JSON.parse(localStorage.getItem('TokenArray')) || [];
-        let storageArray3 = JSON.parse(localStorage.getItem('buttonArray')) || [];
+        // let storageArray3 = JSON.parse(localStorage.getItem('buttonArray')) || [];
         let convoId = "";
-        let tokes = "";
-    
+        let tokes = "E5tNrEM4jEA.U_cs9NVdNnAURS-LR5r003afHYBtHnGnHylkn8Neuhk";
+        console.log(tokes);
         function addToStorageConvoId(value) {
             let storageArray = JSON.parse(localStorage.getItem('ConvoArray')) || [];
             storageArray.push(value);
-            // if (!storageArray.includes(value) && value != null) {
-            //     // Add the new item to the array
-            //     storageArray.push(value);
-            //     // Update the array in local storage
-            //     localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
-            //   }
             localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
             
         }
@@ -117,12 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
         function addToStorageToken(value) {
           let storageArray = JSON.parse(localStorage.getItem('TokenArray')) || [];
           storageArray.push(value);
-          // if (!storageArray.includes(value) && value != null) {
-          //   // Add the new item to the array
-          //   storageArray.push(value);
-          //   // Update the array in local storage
-          //   localStorage.setItem('TokenArray', JSON.stringify(storageArray));
-          // }
           localStorage.setItem('TokenArray', JSON.stringify(storageArray));
           
       }
@@ -164,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
       for (let pair of storagePairs) {
           if (pair[0] === buttonValue) {
               result = pair;
-              tokes = pair[1];
+              // tokes = pair[1];
               convoId = pair[0];    
               break; // exit loop once pair is found
           }
@@ -177,14 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
         directLine.postActivity({
           name: 'PDTestEvent',
           type: 'event',
-          // value: {
-            
-          // }
         }).subscribe();
       }
-    
-    // let resu3 = deleteDuplicates(result);
-    // console.log(resu3);
     
         function displayButtons() {
             let storageArray = JSON.parse(localStorage.getItem('buttonArray')) || [];
@@ -198,37 +157,21 @@ document.addEventListener('DOMContentLoaded', function() {
               
               if (value !== null) {
                 let button = document.createElement('button');
-                button.textContent = value;
+                button.textContent = new Date().toDateString();
+                button.value = value;
                 button.id = "testingbtn";
                 button.onclick = function() {
-                  let pair = retrievePair(button.textContent);
+                  let pair = retrievePair(button.value);
                   if (pair) {
                     console.log(tokes);
-                    console.log("that was token DirectLine");
+                    console.log("that was token DirectLine Secret");
                     console.log(convoId);
                     console.log("that was convoId");
-                    // sendEventMessage();
+                    sendEventMessage();
                   } else {
                       console.log('Pair not found for button value');
                   }
-                // let button = document.createElement('button');
-                // button.textContent = value;
-                // buttonContainer.appendChild(button);
               }
-                // let button = document.createElement('button');
-                // button.textContent = value;
-                            // button.onclick = function() {
-                //     Handle button click, e.g., alert the value
-                //     alert(value);
-                // let pair = retrievePair(button.textContent);
-                // if (pair) {
-                //     let key = pair[0];
-                //     let value = pair[1];
-                //     console.log(`Key: ${key}, Value: ${value}`);
-                // } else {
-                //     console.log('Pair not found for button value');
-                // }
-                // };
                 buttonContainer.appendChild(button);
               }
             });
@@ -250,14 +193,13 @@ document.addEventListener('DOMContentLoaded', function() {
               name: 'startConversation',
               type: 'event',
               value: {
-                DirectLineToken: tokes,
                 conversationId: convoId
               }
             })
             .subscribe();
 
           // Only send the event once, unsubscribe after the event is sent.
-          subscription.unsubscribe();
+          // subscription.unsubscribe();
         }
       }          
     });
