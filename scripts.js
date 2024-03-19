@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
       userAvatarBackgroundColor: 'rgba(75,40,109)',
       userAvatarInitials: 'You'
     };
-    const tokenEndpointURL = new URL('https://default38da2016f3ea4b0abb3376eadba89b.d8.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crb36_nebulaAi/directline/token?api-version=2022-03-01-preview');
+    // const tokenEndpointURL = new URL('https://default38da2016f3ea4b0abb3376eadba89b.d8.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crb36_nebulaAi/directline/token?api-version=2022-03-01-preview');
   
-    //const tokenEndpointURL = new URL('https://a1a980b40406e5c1bcb0e633542587.0e.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crda6_copilot2/directline/token?api-version=2022-03-01-preview');
+    const tokenEndpointURL = new URL('https://a1a980b40406e5c1bcb0e633542587.0e.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crda6_copilot2/directline/token?api-version=2022-03-01-preview');
     //const tokenEndpointURL = new URL('https://default38da2016f3ea4b0abb3376eadba89b.d8.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crb36_nebulaUnified/directline/token?api-version=2022-03-01-preview');
     const locale = document.documentElement.lang || 'en';
   
@@ -82,14 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // It must be treated like user password.
         conversationId = sessionStorage['conversationId'];  // If this is set, the there is an existing conversation to be retrieved, watermark is a const value of 1
         var directLine;
-        addToStorage(conversationId);
-        // conversationTest = localStorage.setItem('conversationId', JSON.stringify(conversationId));
-        // if(conversationTest != "") {
-        //   console.log("hola");
-        // } else {
-        //   conversationTest = [];
-        //   conversationTest.push(localStorage.setItem('conversationId', JSON.stringify( sessionStorage['conversationId'])));
-        // }
+        addToStorageConvoId(sessionStorage['conversationId']);
+        addToStorageToken(sessionStorage['token']);
         // var listArray = [conversationId,token];
         // console.log(listArray);
         if(conversationId) { 
@@ -97,11 +91,150 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         else {
           directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token: token, watermark: watermark});
-          // newconvoid = sessionStorage['conversationId'];
-          // newtoken = sessionStorage['token']; 
-          // listArray.push(newconvoid, newtoken);
-          // console.log(listArray);
         }
+
+        let storageArray1 = JSON.parse(localStorage.getItem('ConvoArray')) || [];
+        let storageArray2 = JSON.parse(localStorage.getItem('TokenArray')) || [];
+        let convoId = "";
+        let tokes = "";
+    
+        function addToStorageConvoId(value) {
+            let storageArray = JSON.parse(localStorage.getItem('ConvoArray')) || [];
+            // storageArray.push(value);
+            if (!storageArray.includes(value) && value != null) {
+                // Add the new item to the array
+                storageArray.push(value);
+                // Update the array in local storage
+                localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
+              }
+            // localStorage.setItem('ConvoArray', JSON.stringify(storageArray));
+            
+        }
+    
+        function addToStorageToken(value) {
+          let storageArray = JSON.parse(localStorage.getItem('TokenArray')) || [];
+          // storageArray.push(value);
+          if (!storageArray.includes(value) && value != null) {
+            // Add the new item to the array
+            storageArray.push(value);
+            // Update the array in local storage
+            localStorage.setItem('TokenArray', JSON.stringify(storageArray));
+          }
+          // localStorage.setItem('TokenArray', JSON.stringify(storageArray));
+          
+      }
+      
+      //Delete duplicates of the arrays created on the local storage
+      // function deleteDuplicates(){
+      // // Retrieve the array from local storage
+      // let storedArray = JSON.parse(localStorage.getItem('myArray')) || [];
+
+      // // Check if the item already exists in the array
+      // if (!storedArray.includes(newItem)) {
+      //     // Add the new item to the array
+      //     storedArray.push(newItem);
+      // // Update the array in local storage
+      // localStorage.setItem('myArray', JSON.stringify(storedArray));
+      //   }
+      // }
+    
+    
+      function getPairedValues(storageArray1, storageArray2) {
+        let pairedValues = [];
+        // Ensure both arrays are of the same length
+        if (storageArray2.length === storageArray1.length) {
+            for (let i = 0; i < storageArray2.length; i++) {
+                pairedValues.push([storageArray1[i], storageArray2[i]]);
+                localStorage.setItem('PairedValues', JSON.stringify(pairedValues));
+            }
+        } else {
+            console.error('Arrays must have the same length');
+        }
+        return pairedValues;
+      }    
+    
+    let result = getPairedValues(storageArray1, storageArray2);
+    // console.log(result);
+    
+    function retrievePair(buttonValue) {
+      let storagePairs = JSON.parse(localStorage.getItem('PairedValues')) || [];
+      let result = null;
+      
+      for (let pair of storagePairs) {
+          if (pair[0] === buttonValue) {
+              result = pair;
+              tokes = pair[1];
+              convoId = pair[0];    
+              break; // exit loop once pair is found
+          }
+      }
+      // console.log(secondp);
+      return result;
+      }
+    
+      function sendEventMessage() {
+        directLine.postActivity({
+          name: 'PDTestEvent',
+          type: 'event',
+          // value: {
+            
+          // }
+        }).subscribe();
+      }
+    
+    // let resu3 = deleteDuplicates(result);
+    // console.log(resu3);
+    
+        function displayButtons() {
+            let storageArray = JSON.parse(localStorage.getItem('ConvoArray')) || [];
+            let buttonContainer = document.getElementById('buttonContainer');
+        
+            // Clear existing buttons
+            buttonContainer.innerHTML = '';
+        
+            // Add a button for each value
+            storageArray.forEach(function(value) {
+              
+              if (value !== null) {
+                let button = document.createElement('button');
+                button.textContent = value;
+                button.id = "testingbtn";
+                button.onclick = function() {
+                  let pair = retrievePair(button.textContent);
+                  if (pair) {
+                    console.log(tokes);
+                    console.log("that was token DirectLine");
+                    console.log(convoId);
+                    console.log("that was convoId");
+                    // sendEventMessage();
+                  } else {
+                      console.log('Pair not found for button value');
+                  }
+                // let button = document.createElement('button');
+                // button.textContent = value;
+                // buttonContainer.appendChild(button);
+              }
+                // let button = document.createElement('button');
+                // button.textContent = value;
+                            // button.onclick = function() {
+                //     Handle button click, e.g., alert the value
+                //     alert(value);
+                // let pair = retrievePair(button.textContent);
+                // if (pair) {
+                //     let key = pair[0];
+                //     let value = pair[1];
+                //     console.log(`Key: ${key}, Value: ${value}`);
+                // } else {
+                //     console.log('Pair not found for button value');
+                // }
+                // };
+                buttonContainer.appendChild(button);
+              }
+            });
+        }
+    
+
+
 
   
     // Sends "startConversation" event when the connection is established.
@@ -115,7 +248,10 @@ document.addEventListener('DOMContentLoaded', function() {
               locale,
               name: 'startConversation',
               type: 'event',
-              value: {DirectLineToken: token}
+              value: {
+                DirectLineToken: tokes,
+                conversationId: convoId
+              }
             })
             .subscribe();
 
@@ -127,22 +263,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('chat-history-button').addEventListener('click', () => {
       sendEventMessage();
-    });
-  
-    function sendEventMessage() {
-      directLine.postActivity({
-        type: 'event',
-        name: 'PDTestEvent',
-        value: token
-      }).subscribe();
-    }
+    });  
 
-    function addToStorage(value) {
-      let storageArray = JSON.parse(localStorage.getItem('myArray')) || [];
-      storageArray.push(value);
-      localStorage.setItem('myArray', JSON.stringify(storageArray));
-  }
-  
+
+    window.onload = displayButtons;
     window.WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
   })();
   
