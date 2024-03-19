@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Agrega un evento al botón para ocultar el descargo de responsabilidad cuando se hace clic en "Aceptar"
     document.getElementById('accept-button').addEventListener('click', function() {
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let storageArray2 = JSON.parse(localStorage.getItem('TokenArray')) || [];
         // let storageArray3 = JSON.parse(localStorage.getItem('buttonArray')) || [];
         let convoId = "";
-        let tokes = "E5tNrEM4jEA.U_cs9NVdNnAURS-LR5r003afHYBtHnGnHylkn8Neuhk";
+        let tokes = "";
         console.log(tokes);
         function addToStorageConvoId(value) {
             let storageArray = JSON.parse(localStorage.getItem('ConvoArray')) || [];
@@ -129,20 +131,25 @@ document.addEventListener('DOMContentLoaded', function() {
       for (let pair of storagePairs) {
           if (pair[0] === buttonValue) {
               result = pair;
-              // tokes = pair[1];
+            
               convoId = pair[0];    
               break; // exit loop once pair is found
           }
       }
-      // console.log(secondp);
+      // console.log(convoId);
       return result;
       }
     
-      function sendEventMessage() {
+      function sendEventMessage(convoId) {
         directLine.postActivity({
           name: 'PDTestEvent',
           type: 'event',
+          value: {ConversationId: convoId}
+          
         }).subscribe();
+        // console.log(convoId);
+        // console.log("I am in sendEventMessage, prior message is convoId");
+        // await context.sendActivity("Welcome!");
       }
     
         function displayButtons() {
@@ -163,11 +170,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 button.onclick = function() {
                   let pair = retrievePair(button.value);
                   if (pair) {
-                    console.log(tokes);
-                    console.log("that was token DirectLine Secret");
-                    console.log(convoId);
-                    console.log("that was convoId");
-                    sendEventMessage();
+                    // console.log(tokes);
+                    // console.log("that was token DirectLine Secret");
+                    // console.log(convoId);
+                    // console.log("that was convoId");
+                    convoId = value;
+                    sendEventMessage(convoId);
                   } else {
                       console.log('Pair not found for button value');
                   }
@@ -192,22 +200,22 @@ document.addEventListener('DOMContentLoaded', function() {
               locale,
               name: 'startConversation',
               type: 'event',
-              value: {
-                conversationId: convoId
-              }
+              value: {conversationId: convoId}
             })
             .subscribe();
 
           // Only send the event once, unsubscribe after the event is sent.
-          // subscription.unsubscribe();
+          subscription.unsubscribe();
         }
+        // console.log(convoId);
+        // console.log("I am inside the startConversation activity and that was convoId");
       }          
     });
 
     document.getElementById('chat-history-button').addEventListener('click', () => {
-      sendEventMessage();
+      // console.log(this.value);
+      // sendEventMessage();
     });  
-
 
     window.onload = displayButtons;
     window.WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
